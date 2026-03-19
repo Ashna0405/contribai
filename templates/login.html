@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ContribAI — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0d12;--surface:#13151c;--surface2:#1a1d27;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--accent:#4f8fff;--accent2:#7c3aed;--text:#e2e4ef;--muted:#5a5f75}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(79,143,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,143,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:48px 40px;text-align:center;max-width:420px;width:90%;position:relative;z-index:1}
+.logo{width:56px;height:56px;background:linear-gradient(135deg,#4f8fff,#7c3aed);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 24px}
+h1{font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px}
+.sub{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:32px}
+.github-btn{display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;color:#0d1117;border:none;border-radius:10px;padding:14px 24px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:100%;text-decoration:none;transition:opacity 0.15s}
+.github-btn:hover{opacity:0.9}
+.github-btn svg{width:22px;height:22px}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px}
+.feat{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:left}
+.feat-icon{font-size:18px;margin-bottom:6px}
+.feat-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.feat-desc{font-size:11px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">⚡</div>
+  <h1>ContribAI</h1>
+  <p class="sub">Multi-agent AI system that analyzes GitHub issues and guides you through open source contributions.</p>
+  <a href="/auth/login" class="github-btn">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    Continue with GitHub
+  </a>
+  <div class="features">
+    <div class="feat"><div class="feat-icon">🧠</div><div class="feat-title">5 AI Agents</div><div class="feat-desc">Each agent has a specific role in analyzing issues</div></div>
+    <div class="feat"><div class="feat-icon">🔍</div><div class="feat-title">Real Repo Parsing</div><div class="feat-desc">Scans actual GitHub repo file structure</div></div>
+    <div class="feat"><div class="feat-icon">🧾</div><div class="feat-title">PR Drafts</div><div class="feat-desc">Auto-generates professional PR descriptions</div></div>
+    <div class="feat"><div class="feat-icon">📊</div><div class="feat-title">Confidence Scores</div><div class="feat-desc">Every agent scores its own output quality</div></div>
+  </div>
+</div>
+</body>
+</html>

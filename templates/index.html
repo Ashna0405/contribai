@@ -89,7 +89,7 @@ input::placeholder{color:var(--muted)}
     <input id="ii" placeholder="issue #" value="5915"/>
     <button class="rbtn" id="runBtn" onclick="startPipeline()">Run Pipeline</button>
   </div>
-  <div style="margin-left:auto;font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace" id="stxt">ready</div>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:12px"><span id="stxt" style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">ready</span><img src="{{ user.avatar }}" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.2)"/><span style="font-size:13px;font-weight:600">{{ user.name }}</span><a href="/auth/logout" style="font-size:11px;color:var(--muted);text-decoration:none;font-family:JetBrains Mono,monospace">logout</a></div>
 </header>
 <div class="layout">
   <aside class="sidebar">
