@@ -123,6 +123,13 @@ def logout():
     return redirect("/")
 
 
+@app.route("/dashboard")
+def dashboard():
+    user = session.get("user")
+    if not user:
+        return redirect("/")
+    return render_template("dashboard.html", user=user)
+
 @app.route("/history")
 def history():
     user = session.get("user")
@@ -162,7 +169,15 @@ def run():
                         "repo": f"{owner}/{repo}",
                         "issue": issue_number,
                         "pr_title": item["all"].get("pr_helper", {}).get("title", ""),
-                        "confidence": item["all"].get("pr_helper", {}).get("confidence", 0)
+                        "confidence": item["all"].get("pr_helper", {}).get("confidence", 0),
+                        "issue_type": item["all"].get("planner", {}).get("issue_type", ""),
+                        "agent_scores": {
+                            "issue_reader": item["all"].get("issue_reader", {}).get("confidence", 0),
+                            "planner": item["all"].get("planner", {}).get("confidence", 0),
+                            "code_explorer": item["all"].get("code_explorer", {}).get("confidence", 0),
+                            "solution": item["all"].get("solution", {}).get("confidence", 0),
+                            "pr_helper": item["all"].get("pr_helper", {}).get("confidence", 0)
+                        }
                     })
                     # Keep only last 10
                     user_history[username] = user_history[username][:10]
