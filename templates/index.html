@@ -123,6 +123,8 @@ input::placeholder{color:var(--muted)}
     <a href="/dashboard">Dashboard</a>
     <a href="/profile">Profile</a>
     <a href="/settings-page">Settings</a>
+    <a href="/profile">Profile</a>
+    <a href="/settings-page">Settings</a>
   </nav>
   <div class="header-right">
     <div class="status-pill"><div class="status-dot" id="sdot"></div><span id="stxt">ready</span></div>
@@ -134,11 +136,11 @@ input::placeholder{color:var(--muted)}
 
 <div class="input-bar">
   <div class="input-group">
-    <input id="oi" placeholder="owner" value="psf"/>
+    <input id="oi" placeholder="owner" value=""/>
     <div class="input-sep"></div>
-    <input id="ri" placeholder="repository" value="requests"/>
+    <input id="ri" placeholder="repository" value=""/>
     <div class="input-sep"></div>
-    <input id="ii" placeholder="issue #" value="5915"/>
+    <input id="ii" placeholder="issue #" value=""/>
   </div>
   <button class="run-btn" id="runBtn" onclick="startPipeline()">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
