@@ -3,184 +3,240 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ContribAI</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<title>ContribAI — Analyze</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0b0d12;--surface:#13151c;--surface2:#1a1d27;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--accent:#4f8fff;--accent2:#7c3aed;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--text:#e2e4ef;--muted:#5a5f75}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(79,143,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(79,143,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
-header{position:sticky;top:0;z-index:100;background:rgba(11,13,18,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:20px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
-.logo-badge{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.hform{display:flex;align-items:center;gap:10px;flex:1;max-width:680px}
-input{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:9px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text);outline:none}
-input:focus{border-color:var(--accent)}
-input::placeholder{color:var(--muted)}
-#oi{width:130px}#ri{width:130px}#ii{width:90px}
-.rbtn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:8px;padding:9px 22px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
-.rbtn:disabled{opacity:0.35;cursor:not-allowed}
-.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 61px);position:relative;z-index:1}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:28px 0;position:sticky;top:61px;height:calc(100vh - 61px);overflow-y:auto}
-.slabel{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:0 20px 16px}
-.arow{padding:10px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;border-left:2px solid transparent;transition:background 0.15s}
-.arow:hover{background:var(--surface2)}
-.arow.active{background:rgba(79,143,255,0.06);border-left-color:var(--accent)}
-.arow.s-done .dot{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.5)}
-.arow.s-running .dot{background:var(--amber);animation:blink 1s infinite}
-.arow.s-idle .dot{background:var(--muted)}
-.arow.s-error .dot{background:var(--red)}
+:root{--bg:#080a0f;--surface:#0d1017;--surface2:#131720;--surface3:#181e2a;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--accent:#4f8fff;--accent2:#7c3aed;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--text:#f0f2f8;--muted:#4a5068;--muted2:#6b7590}
+body{background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* Header */
+header{position:sticky;top:0;z-index:100;background:rgba(8,10,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:56px;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+nav{display:flex;gap:2px}
+nav a{font-size:13px;color:var(--muted2);text-decoration:none;padding:5px 12px;border-radius:6px;font-weight:500;transition:color 0.15s,background 0.15s}
+nav a:hover{color:var(--text);background:var(--surface2)}
+nav a.active{color:var(--text);background:var(--surface2)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:11px;font-family:"JetBrains Mono",monospace;color:var(--muted2);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background 0.3s}
+.status-dot.running{background:var(--amber);animation:blink 1s infinite}
+.status-dot.done{background:var(--green)}
+.user-avatar{width:26px;height:26px;border-radius:50%;border:1px solid var(--border2)}
+.user-name{font-size:13px;font-weight:500;color:var(--muted2)}
+.logout-btn{font-size:11px;color:var(--muted);text-decoration:none;font-family:"JetBrains Mono",monospace;padding:4px 10px;border:1px solid var(--border);border-radius:6px;transition:border-color 0.15s}
+.logout-btn:hover{border-color:var(--border2);color:var(--muted2)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.aname{font-size:13px;font-weight:600}
-.afile{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.conn{width:1px;height:12px;background:var(--border);margin:0 0 0 28px}
-.pwrap{padding:20px 20px 0;margin-top:12px;border-top:1px solid var(--border)}
-.plabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between}
-.ptrack{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
-.pfill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width 0.5s;width:0%}
-.main{padding:32px}
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center}
-.eicon{font-size:52px;opacity:0.2}
-.etitle{font-size:22px;font-weight:700;opacity:0.35}
-.edesc{font-size:14px;color:var(--muted);max-width:340px;line-height:1.7}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden;animation:slideUp 0.35s ease}
-@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.chead{display:flex;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border)}
-.cicon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ctitle{font-size:15px;font-weight:700}
-.csub{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace}
-.cbadge{margin-left:auto;font-size:11px;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;background:rgba(34,197,94,0.1);color:var(--green)}
-.cbody{padding:20px}
-.field{margin-bottom:18px}
+
+/* Input bar */
+.input-bar{padding:20px 32px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:12px}
+.input-group{display:flex;align-items:center;gap:0;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;overflow:hidden;flex:1;max-width:600px;transition:border-color 0.2s}
+.input-group:focus-within{border-color:rgba(79,143,255,0.4)}
+.input-sep{width:1px;height:20px;background:var(--border2);flex-shrink:0}
+input{background:transparent;border:none;padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--text);outline:none;min-width:0}
+input::placeholder{color:var(--muted)}
+#oi{width:140px}#ri{width:140px;flex:1}#ii{width:100px}
+.run-btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-family:"Inter",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.15s,transform 0.1s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.run-btn:hover{opacity:0.88}
+.run-btn:active{transform:scale(0.97)}
+.run-btn:disabled{opacity:0.3;cursor:not-allowed}
+.run-btn svg{width:14px;height:14px}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 113px)}
+
+/* Sidebar */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:24px 0;position:sticky;top:113px;height:calc(100vh - 113px);overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-section{padding:0 16px;margin-bottom:8px}
+.sidebar-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;padding:0 8px;margin-bottom:8px}
+.agent-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;cursor:pointer;transition:background 0.15s;border:1px solid transparent}
+.agent-item:hover{background:var(--surface2)}
+.agent-item.active{background:rgba(79,143,255,0.06);border-color:rgba(79,143,255,0.15)}
+.agent-item.s-done .adot{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.4)}
+.agent-item.s-running .adot{background:var(--amber);box-shadow:0 0 6px rgba(245,158,11,0.4);animation:blink 1s infinite}
+.agent-item.s-idle .adot{background:var(--muted)}
+.agent-item.s-error .adot{background:var(--red)}
+.adot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:all 0.3s}
+.agent-icon{font-size:14px;flex-shrink:0}
+.agent-text{flex:1;min-width:0}
+.agent-name{font-size:12px;font-weight:500;color:var(--text)}
+.agent-file{font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conn{width:1px;height:8px;background:var(--border);margin:0 0 0 20px}
+.sidebar-bottom{margin-top:auto;padding:16px;border-top:1px solid var(--border)}
+.progress-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:6px;font-family:"JetBrains Mono",monospace}
+.progress-track{height:2px;background:var(--surface2);border-radius:1px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:1px;transition:width 0.5s ease;width:0%}
+
+/* Main */
+.main{padding:28px;overflow-y:auto}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:12px;text-align:center}
+.empty-icon{width:48px;height:48px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:4px}
+.empty-title{font-size:16px;font-weight:600;color:var(--muted2)}
+.empty-desc{font-size:13px;color:var(--muted);max-width:320px;line-height:1.7}
+.empty-hint{font-size:11px;font-family:"JetBrains Mono",monospace;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 14px;margin-top:4px}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.card-head-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.card-head-title{font-size:14px;font-weight:600}
+.card-head-sub{font-size:11px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.card-badge{margin-left:auto;font-size:10px;font-family:"JetBrains Mono",monospace;padding:3px 8px;border-radius:4px;font-weight:500;background:rgba(34,197,94,0.08);color:var(--green);border:1px solid rgba(34,197,94,0.15)}
+.card-body{padding:18px}
+.field{margin-bottom:16px}
 .field:last-child{margin-bottom:0}
 .flabel{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px}
-.ftext{font-size:13px;line-height:1.75}
-.tags{display:flex;flex-wrap:wrap;gap:7px}
-.tag{font-size:11px;font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--accent)}
-.tag.file{color:var(--cyan)}
-.tag.risk{color:var(--red);background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.2)}
-.tag.test{color:var(--green);background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.2)}
-.tag.skill{color:var(--amber);background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.2)}
+.ftext{font-size:13px;line-height:1.75;color:var(--muted2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;font-family:"JetBrains Mono",monospace;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted2)}
+.tag.blue{color:var(--accent);background:rgba(79,143,255,0.06);border-color:rgba(79,143,255,0.15)}
+.tag.cyan{color:var(--cyan);background:rgba(34,211,238,0.06);border-color:rgba(34,211,238,0.15)}
+.tag.green{color:var(--green);background:rgba(34,197,94,0.06);border-color:rgba(34,197,94,0.15)}
+.tag.red{color:var(--red);background:rgba(239,68,68,0.06);border-color:rgba(239,68,68,0.15)}
+.tag.amber{color:var(--amber);background:rgba(245,158,11,0.06);border-color:rgba(245,158,11,0.15)}
 .steps{list-style:none;counter-reset:s}
-.steps li{counter-increment:s;display:flex;gap:12px;font-size:13px;line-height:1.7;padding:6px 0;border-bottom:1px solid var(--border)}
+.steps li{counter-increment:s;display:flex;gap:10px;font-size:13px;color:var(--muted2);line-height:1.7;padding:6px 0;border-bottom:1px solid var(--border)}
 .steps li:last-child{border-bottom:none}
-.steps li::before{content:counter(s);min-width:22px;height:22px;background:var(--surface2);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--accent);flex-shrink:0;margin-top:2px}
-.crow{display:flex;align-items:center;gap:10px;font-size:12px;font-family:'JetBrains Mono',monospace}
-.ctrack{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
-.cfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.8s}
-.cval{color:var(--accent);min-width:28px;text-align:right}
-.prbox{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:18px}
-.prtitle{font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:14px;word-break:break-word}
-.cpbtn{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 16px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:12px}
-.skel{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface) 50%,var(--surface2) 75%);background-size:200%;animation:sh 1.4s infinite;border-radius:6px;height:14px;margin-bottom:10px}
-@keyframes sh{0%{background-position:200%}100%{background-position:-200%}}
-.lcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.steps li::before{content:counter(s);min-width:20px;height:20px;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-family:"JetBrains Mono",monospace;color:var(--muted2);flex-shrink:0;margin-top:3px}
 .tcol{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.conf-row{display:flex;align-items:center;gap:10px;font-size:12px;font-family:"JetBrains Mono",monospace}
+.ctrack{flex:1;height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.cfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s ease}
+.cval{color:var(--accent);min-width:24px;text-align:right;font-size:11px}
+.pr-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px}
+.pr-title{font-size:14px;font-weight:600;font-family:"JetBrains Mono",monospace;color:var(--accent);margin-bottom:14px;word-break:break-word;line-height:1.4}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:7px 14px;color:var(--muted2);font-family:"Inter",sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:border-color 0.15s,color 0.15s;margin-top:14px}
+.copy-btn:hover{border-color:var(--accent);color:var(--text)}
+.skel{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200%;animation:sh 1.4s infinite;border-radius:4px;height:12px;margin-bottom:8px}
+@keyframes sh{0%{background-position:200%}100%{background-position:-200%}}
+.lcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px}
 </style>
 </head>
 <body>
 <header>
-  <a href="/" style="text-decoration:none;color:inherit"><div class="logo"><div class="logo-badge">⚡</div>ContribAI</div></a><a href="/dashboard" style="font-size:13px;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:8px;background:var(--surface2)">Dashboard</a>
-  <div class="hform">
-    <input id="oi" placeholder="owner" value="psf"/>
-    <span style="color:var(--muted);font-family:'JetBrains Mono',monospace">/</span>
-    <input id="ri" placeholder="repo" value="requests"/>
-    <input id="ii" placeholder="issue #" value="5915"/>
-    <button class="rbtn" id="runBtn" onclick="startPipeline()">Run Pipeline</button>
+  <a href="/" class="logo"><div class="logo-icon">⚡</div><span class="logo-name">ContribAI</span></a>
+  <nav>
+    <a href="/" class="active">Analyze</a>
+    <a href="/dashboard">Dashboard</a>
+  </nav>
+  <div class="header-right">
+    <div class="status-pill"><div class="status-dot" id="sdot"></div><span id="stxt">ready</span></div>
+    <img src="{{ user.avatar }}" class="user-avatar"/>
+    <span class="user-name">{{ user.name }}</span>
+    <a href="/auth/logout" class="logout-btn">logout</a>
   </div>
-  <div style="margin-left:auto;display:flex;align-items:center;gap:12px"><span id="stxt" style="font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace">ready</span><img src="{{ user.avatar }}" style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.2)"/><span style="font-size:13px;font-weight:600">{{ user.name }}</span><a href="/auth/logout" style="font-size:11px;color:var(--muted);text-decoration:none;font-family:JetBrains Mono,monospace">logout</a></div>
 </header>
+
+<div class="input-bar">
+  <div class="input-group">
+    <input id="oi" placeholder="owner" value="psf"/>
+    <div class="input-sep"></div>
+    <input id="ri" placeholder="repository" value="requests"/>
+    <div class="input-sep"></div>
+    <input id="ii" placeholder="issue #" value="5915"/>
+  </div>
+  <button class="run-btn" id="runBtn" onclick="startPipeline()">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    Run Pipeline
+  </button>
+</div>
+
 <div class="layout">
   <aside class="sidebar">
-    <div class="slabel">Pipeline</div>
-    <div class="arow s-idle" id="row-issue_reader" onclick="goCard('card-issue_reader')"><div class="dot"></div><div><div class="aname">Issue Reader</div><div class="afile">issue_reader_agent.py</div></div></div>
-    <div class="conn"></div>
-    <div class="arow s-idle" id="row-planner" onclick="goCard('card-planner')"><div class="dot"></div><div><div class="aname">Planner</div><div class="afile">planner_agent.py</div></div></div>
-    <div class="conn"></div>
-    <div class="arow s-idle" id="row-code_explorer" onclick="goCard('card-code_explorer')"><div class="dot"></div><div><div class="aname">Code Explorer</div><div class="afile">code_explorer_agent.py</div></div></div>
-    <div class="conn"></div>
-    <div class="arow s-idle" id="row-solution" onclick="goCard('card-solution')"><div class="dot"></div><div><div class="aname">Solution</div><div class="afile">solution_agent.py</div></div></div>
-    <div class="conn"></div>
-    <div class="arow s-idle" id="row-pr_helper" onclick="goCard('card-pr_helper')"><div class="dot"></div><div><div class="aname">PR Helper</div><div class="afile">pr_helper_agent.py</div></div></div>
-    <div class="pwrap">
-      <div class="plabel"><span>Progress</span><span id="pc">0 / 5</span></div>
-      <div class="ptrack"><div class="pfill" id="pf"></div></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Agents</div>
+      <div class="agent-item s-idle" id="row-issue_reader" onclick="goCard('card-issue_reader')">
+        <div class="adot"></div><div class="agent-icon">📋</div>
+        <div class="agent-text"><div class="agent-name">Issue Reader</div><div class="agent-file">issue_reader_agent.py</div></div>
+      </div>
+      <div class="conn"></div>
+      <div class="agent-item s-idle" id="row-planner" onclick="goCard('card-planner')">
+        <div class="adot"></div><div class="agent-icon">🧠</div>
+        <div class="agent-text"><div class="agent-name">Planner</div><div class="agent-file">planner_agent.py</div></div>
+      </div>
+      <div class="conn"></div>
+      <div class="agent-item s-idle" id="row-code_explorer" onclick="goCard('card-code_explorer')">
+        <div class="adot"></div><div class="agent-icon">🔍</div>
+        <div class="agent-text"><div class="agent-name">Code Explorer</div><div class="agent-file">code_explorer_agent.py</div></div>
+      </div>
+      <div class="conn"></div>
+      <div class="agent-item s-idle" id="row-solution" onclick="goCard('card-solution')">
+        <div class="adot"></div><div class="agent-icon">🛠</div>
+        <div class="agent-text"><div class="agent-name">Solution</div><div class="agent-file">solution_agent.py</div></div>
+      </div>
+      <div class="conn"></div>
+      <div class="agent-item s-idle" id="row-pr_helper" onclick="goCard('card-pr_helper')">
+        <div class="adot"></div><div class="agent-icon">🧾</div>
+        <div class="agent-text"><div class="agent-name">PR Helper</div><div class="agent-file">pr_helper_agent.py</div></div>
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="progress-label"><span>Progress</span><span id="pc">0 / 5</span></div>
+      <div class="progress-track"><div class="progress-fill" id="pf"></div></div>
     </div>
   </aside>
+
   <main class="main">
     <div class="empty" id="emptyState">
-      <div class="eicon">🔍</div>
-      <div class="etitle">No issue analyzed yet</div>
-      <div class="edesc">Enter a GitHub owner, repo and issue number above, then click Run Pipeline.</div>
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">No issue analyzed yet</div>
+      <div class="empty-desc">Enter a GitHub owner, repo and issue number then click Run Pipeline to start.</div>
+      <div class="empty-hint">Try: psf / requests / 5915</div>
     </div>
     <div id="cc"></div>
   </main>
 </div>
+
 <script>
-var AG={issue_reader:{label:"Issue Reader Agent",file:"issue_reader_agent.py",icon:"📋",color:"#4f8fff",bg:"rgba(79,143,255,0.1)"},planner:{label:"Planner Agent",file:"planner_agent.py",icon:"🧠",color:"#7c3aed",bg:"rgba(124,58,237,0.1)"},code_explorer:{label:"Code Explorer Agent",file:"code_explorer_agent.py",icon:"🔍",color:"#22d3ee",bg:"rgba(34,211,238,0.1)"},solution:{label:"Solution Agent",file:"solution_agent.py",icon:"🛠",color:"#22c55e",bg:"rgba(34,197,94,0.1)"},pr_helper:{label:"PR Helper Agent",file:"pr_helper_agent.py",icon:"🧾",color:"#f59e0b",bg:"rgba(245,158,11,0.1)"}};
+var AG={issue_reader:{label:"Issue Reader",file:"issue_reader_agent.py",icon:"📋",color:"#4f8fff",bg:"rgba(79,143,255,0.08)"},planner:{label:"Planner",file:"planner_agent.py",icon:"🧠",color:"#7c3aed",bg:"rgba(124,58,237,0.08)"},code_explorer:{label:"Code Explorer",file:"code_explorer_agent.py",icon:"🔍",color:"#22d3ee",bg:"rgba(34,211,238,0.08)"},solution:{label:"Solution",file:"solution_agent.py",icon:"🛠",color:"#22c55e",bg:"rgba(34,197,94,0.08)"},pr_helper:{label:"PR Helper",file:"pr_helper_agent.py",icon:"🧾",color:"#f59e0b",bg:"rgba(245,158,11,0.08)"}};
 var dc=0,es=null;
-function setState(id,s){var r=document.getElementById("row-"+id);if(r)r.className="arow s-"+s;}
+function setState(id,s){var r=document.getElementById("row-"+id);if(r)r.className="agent-item s-"+s;}
 function goCard(id){var e=document.getElementById(id);if(e)e.scrollIntoView({behavior:"smooth",block:"start"});}
-function showLoad(id){var c=document.getElementById("cc"),d=document.createElement("div"),a=AG[id];d.className="lcard";d.id="load-"+id;d.innerHTML="<div style='display:flex;align-items:center;gap:12px;margin-bottom:16px'><div style='width:36px;height:36px;border-radius:9px;background:"+a.bg+";display:flex;align-items:center;justify-content:center;font-size:16px'>"+a.icon+"</div><div><div style='font-size:14px;font-weight:700'>"+a.label+"</div><div style='font-size:11px;color:var(--muted)'>analyzing...</div></div></div><div class='skel'></div><div class='skel'></div><div class='skel'></div>";c.appendChild(d);d.scrollIntoView({behavior:"smooth",block:"start"});}
+function showLoad(id){var c=document.getElementById("cc"),d=document.createElement("div"),a=AG[id];d.className="lcard";d.id="load-"+id;d.innerHTML="<div style='display:flex;align-items:center;gap:12px;margin-bottom:14px'><div style='width:32px;height:32px;border-radius:8px;background:"+a.bg+";display:flex;align-items:center;justify-content:center;font-size:14px'>"+a.icon+"</div><div><div style='font-size:13px;font-weight:600'>"+a.label+"</div><div style='font-size:11px;color:var(--muted);font-family:JetBrains Mono,monospace'>analyzing...</div></div></div><div class='skel'></div><div class='skel' style='width:75%'></div><div class='skel' style='width:55%'></div>";c.appendChild(d);d.scrollIntoView({behavior:"smooth",block:"start"});}
 function rmLoad(id){var e=document.getElementById("load-"+id);if(e)e.remove();}
 function tgs(arr,cls){cls=cls||"";return(arr||[]).map(function(t){return"<span class='tag "+cls+"'>"+t+"</span>";}).join("");}
 function sts(arr){return"<ol class='steps'>"+(arr||[]).map(function(s){return"<li>"+s+"</li>";}).join("")+"</ol>";}
 function buildBody(id,d){
-  if(id==="issue_reader"){return "<div class='tcol'><div class='field'><div class='flabel'>Title</div><div class='ftext'>"+(d.title||"")+"</div></div><div class='field'><div class='flabel'>Category</div><div class='tags'>"+(d.issue_category?"<span class='tag'>"+d.issue_category+"</span>":"")+(d.severity?"<span class='tag risk'>"+d.severity+"</span>":"")+(d.beginner_friendly?"<span class='tag test'>beginner friendly</span>":"")+"</div></div></div><div class='field'><div class='flabel'>Description</div><div class='ftext'>"+(d.description||"")+"</div></div>"+(d.labels&&d.labels.length?"<div class='field'><div class='flabel'>Labels</div><div class='tags'>"+tgs(d.labels)+"</div></div>":"")+(d.key_terms&&d.key_terms.length?"<div class='field'><div class='flabel'>Key Terms</div><div class='tags'>"+tgs(d.key_terms,"file")+"</div></div>":"");}
-  if(id==="planner"){return "<div class='tcol'><div class='field'><div class='flabel'>Type</div><div class='tags'><span class='tag'>"+(d.issue_type||"")+"</span></div></div><div class='field'><div class='flabel'>Complexity</div><div class='tags'><span class='tag skill'>"+(d.complexity||"")+"</span>"+(d.estimated_time?"<span class='tag'>"+d.estimated_time+"</span>":"")+"</div></div></div><div class='field'><div class='flabel'>Approach</div><div class='ftext'>"+(d.approach||"")+"</div></div>"+(d.possible_causes&&d.possible_causes.length?"<div class='field'><div class='flabel'>Possible Causes</div><div class='tags'>"+tgs(d.possible_causes)+"</div></div>":"")+(d.next_steps&&d.next_steps.length?"<div class='field'><div class='flabel'>Next Steps</div>"+sts(d.next_steps)+"</div>":"")+(d.skills_needed&&d.skills_needed.length?"<div class='field'><div class='flabel'>Skills</div><div class='tags'>"+tgs(d.skills_needed,"skill")+"</div></div>":"");}
-  if(id==="code_explorer"){return "<div class='field'><div class='flabel'>Files to Check</div><div class='tags'>"+tgs(d.files_to_check,"file")+"</div></div><div class='field'><div class='flabel'>Suspected Areas</div><div class='tags'>"+tgs(d.suspected_areas)+"</div></div>"+(d.entry_points&&d.entry_points.length?"<div class='field'><div class='flabel'>Entry Points</div><div class='tags'>"+tgs(d.entry_points,"file")+"</div></div>":"")+(d.search_keywords&&d.search_keywords.length?"<div class='field'><div class='flabel'>Keywords</div><div class='tags'>"+tgs(d.search_keywords)+"</div></div>":"")+(d.reasoning&&d.reasoning.length?"<div class='field'><div class='flabel'>Reasoning</div>"+sts(d.reasoning)+"</div>":"")+(d.repo_files_scanned?"<div style='font-size:11px;color:var(--muted);margin-top:8px'>"+d.repo_files_scanned+" files scanned</div>":"");}
-  if(id==="solution"){return "<div class='field'><div class='flabel'>Proposed Fix</div>"+sts(d.proposed_fix)+"</div>"+(d.implementation_steps&&d.implementation_steps.length?"<div class='field'><div class='flabel'>Implementation Steps</div>"+sts(d.implementation_steps)+"</div>":"")+"<div class='tcol'>"+(d.tests_to_add&&d.tests_to_add.length?"<div class='field'><div class='flabel'>Tests</div><div class='tags'>"+tgs(d.tests_to_add,"test")+"</div></div>":"")+(d.risks&&d.risks.length?"<div class='field'><div class='flabel'>Risks</div><div class='tags'>"+tgs(d.risks,"risk")+"</div></div>":"")+"</div>";}
-  if(id==="pr_helper"){return "<div class='prbox'><div class='prtitle'>"+(d.title||"")+"</div><div class='field'><div class='flabel'>Summary</div><div class='ftext'>"+(d.summary||"")+"</div></div><div class='field'><div class='flabel'>Problem</div><div class='ftext'>"+(d.problem_statement||"")+"</div></div><div class='field'><div class='flabel'>Solution</div><div class='ftext'>"+(d.solution_description||"")+"</div></div>"+(d.changes&&d.changes.length?"<div class='field'><div class='flabel'>Changes</div><div class='tags'>"+tgs(d.changes,"file")+"</div></div>":"")+(d.tests&&d.tests.length?"<div class='field'><div class='flabel'>Tests</div><div class='tags'>"+tgs(d.tests,"test")+"</div></div>":"")+(d.notes_for_reviewer?"<div class='field'><div class='flabel'>Reviewer Notes</div><div class='ftext'>"+d.notes_for_reviewer+"</div></div>":"")+(d.checklist&&d.checklist.length?"<div class='field'><div class='flabel'>Checklist</div><div class='tags'>"+tgs(d.checklist)+"</div></div>":"")+"</div><button class='cpbtn' id='copybtn'>Copy PR</button>";}
-  return "";
+  if(id==="issue_reader")return"<div class='tcol'><div class='field'><div class='flabel'>Title</div><div class='ftext'>"+( d.title||"")+"</div></div><div class='field'><div class='flabel'>Category</div><div class='tags'>"+(d.issue_category?"<span class='tag blue'>"+d.issue_category+"</span>":"")+(d.severity?"<span class='tag red'>"+d.severity+"</span>":"")+(d.beginner_friendly?"<span class='tag green'>beginner friendly</span>":"")+"</div></div></div><div class='field'><div class='flabel'>Description</div><div class='ftext'>"+(d.description||"")+"</div></div>"+(d.labels&&d.labels.length?"<div class='field'><div class='flabel'>Labels</div><div class='tags'>"+tgs(d.labels)+"</div></div>":"")+(d.key_terms&&d.key_terms.length?"<div class='field'><div class='flabel'>Key Terms</div><div class='tags'>"+tgs(d.key_terms,"cyan")+"</div></div>":"");
+  if(id==="planner")return"<div class='tcol'><div class='field'><div class='flabel'>Type</div><div class='tags'><span class='tag blue'>"+(d.issue_type||"")+"</span></div></div><div class='field'><div class='flabel'>Complexity</div><div class='tags'><span class='tag amber'>"+(d.complexity||"")+"</span>"+(d.estimated_time?"<span class='tag'>"+d.estimated_time+"</span>":"")+"</div></div></div><div class='field'><div class='flabel'>Approach</div><div class='ftext'>"+(d.approach||"")+"</div></div>"+(d.possible_causes&&d.possible_causes.length?"<div class='field'><div class='flabel'>Possible Causes</div><div class='tags'>"+tgs(d.possible_causes)+"</div></div>":"")+(d.next_steps&&d.next_steps.length?"<div class='field'><div class='flabel'>Next Steps</div>"+sts(d.next_steps)+"</div>":"")+(d.skills_needed&&d.skills_needed.length?"<div class='field'><div class='flabel'>Skills</div><div class='tags'>"+tgs(d.skills_needed,"amber")+"</div></div>":"");
+  if(id==="code_explorer")return"<div class='field'><div class='flabel'>Files to Check</div><div class='tags'>"+tgs(d.files_to_check,"cyan")+"</div></div><div class='field'><div class='flabel'>Suspected Areas</div><div class='tags'>"+tgs(d.suspected_areas,"blue")+"</div></div>"+(d.entry_points&&d.entry_points.length?"<div class='field'><div class='flabel'>Entry Points</div><div class='tags'>"+tgs(d.entry_points,"cyan")+"</div></div>":"")+(d.search_keywords&&d.search_keywords.length?"<div class='field'><div class='flabel'>Keywords</div><div class='tags'>"+tgs(d.search_keywords)+"</div></div>":"")+(d.reasoning&&d.reasoning.length?"<div class='field'><div class='flabel'>Reasoning</div>"+sts(d.reasoning)+"</div>":"")+(d.repo_files_scanned?"<div style='font-size:11px;color:var(--muted);margin-top:8px;font-family:JetBrains Mono,monospace'>"+d.repo_files_scanned+" files scanned</div>":"");
+  if(id==="solution")return"<div class='field'><div class='flabel'>Proposed Fix</div>"+sts(d.proposed_fix||[])+"</div>"+(d.implementation_steps&&d.implementation_steps.length?"<div class='field'><div class='flabel'>Implementation Steps</div>"+sts(d.implementation_steps)+"</div>":"")+"<div class='tcol'>"+(d.tests_to_add&&d.tests_to_add.length?"<div class='field'><div class='flabel'>Tests to Add</div><div class='tags'>"+tgs(d.tests_to_add,"green")+"</div></div>":"")+(d.risks&&d.risks.length?"<div class='field'><div class='flabel'>Risks</div><div class='tags'>"+tgs(d.risks,"red")+"</div></div>":"")+"</div>";
+  if(id==="pr_helper")return"<div class='pr-box'><div class='pr-title'>"+(d.title||"")+"</div><div class='field'><div class='flabel'>Summary</div><div class='ftext'>"+(d.summary||"")+"</div></div><div class='field'><div class='flabel'>Problem</div><div class='ftext'>"+(d.problem_statement||"")+"</div></div><div class='field'><div class='flabel'>Solution</div><div class='ftext'>"+(d.solution_description||"")+"</div></div>"+(d.changes&&d.changes.length?"<div class='field'><div class='flabel'>Changes</div><div class='tags'>"+tgs(d.changes,"cyan")+"</div></div>":"")+(d.tests&&d.tests.length?"<div class='field'><div class='flabel'>Tests</div><div class='tags'>"+tgs(d.tests,"green")+"</div></div>":"")+(d.notes_for_reviewer?"<div class='field'><div class='flabel'>Reviewer Notes</div><div class='ftext'>"+d.notes_for_reviewer+"</div></div>":"")+(d.checklist&&d.checklist.length?"<div class='field'><div class='flabel'>Checklist</div><div class='tags'>"+tgs(d.checklist)+"</div></div>":"")+"</div><button class='copy-btn' id='copybtn'>📋 Copy PR Description</button>";
+  return"";
 }
 function renderCard(id,data){
   rmLoad(id);
   var a=AG[id],c=document.getElementById("cc"),card=document.createElement("div");
   card.className="card";card.id="card-"+id;
   var conf=data.confidence,cp=conf?Math.round(conf*100):0;
-  card.innerHTML="<div class='chead'><div class='cicon' style='background:"+a.bg+";color:"+a.color+"'>"+a.icon+"</div><div><div class='ctitle'>"+a.label+"</div><div class='csub'>"+a.file+"</div></div><div class='cbadge'>done</div></div><div class='cbody'>"+buildBody(id,data)+(conf?"<div class='field' style='margin-top:18px'><div class='flabel'>Confidence</div><div class='crow'><div class='ctrack'><div class='cfill' style='width:"+cp+"%'></div></div><div class='cval'>"+conf.toFixed(1)+"</div></div></div>":"")+"</div>";
+  card.innerHTML="<div class='card-head'><div class='card-head-icon' style='background:"+a.bg+";color:"+a.color+"'>"+a.icon+"</div><div><div class='card-head-title'>"+a.label+"</div><div class='card-head-sub'>"+a.file+"</div></div><div class='card-badge'>done</div></div><div class='card-body'>"+buildBody(id,data)+(conf?"<div class='field' style='margin-top:16px'><div class='flabel'>Confidence</div><div class='conf-row'><div class='ctrack'><div class='cfill' style='width:"+cp+"%'></div></div><div class='cval'>"+conf.toFixed(1)+"</div></div></div>":"")+"</div>";
   c.appendChild(card);
   card.scrollIntoView({behavior:"smooth",block:"start"});
-  if(id==="pr_helper"){
-    var btn=card.querySelector("#copybtn");
-    if(btn){btn.onclick=function(){
-      var t="## "+data.title+"\n\n### Summary\n"+data.summary+"\n\n### Problem\n"+data.problem_statement+"\n\n### Solution\n"+data.solution_description+"\n\n### Changes\n"+(data.changes||[]).map(function(c){return"- "+c;}).join("\n")+"\n\n### Tests\n"+(data.tests||[]).map(function(t){return"- "+t;}).join("\n")+"\n\n### Notes\n"+data.notes_for_reviewer+"\n\n### Checklist\n"+(data.checklist||[]).map(function(c){return"- [ ] "+c;}).join("\n");
-      navigator.clipboard.writeText(t).catch(function(){});
-      btn.textContent="Copied!";
-      setTimeout(function(){btn.textContent="Copy PR";},2000);
-    };}
-  }
+  if(id==="pr_helper"){var btn=card.querySelector("#copybtn");if(btn){btn.onclick=function(){var t="## "+data.title+"\n\n### Summary\n"+data.summary+"\n\n### Problem\n"+data.problem_statement+"\n\n### Solution\n"+data.solution_description+"\n\n### Changes\n"+(data.changes||[]).map(function(c){return"- "+c;}).join("\n")+"\n\n### Tests\n"+(data.tests||[]).map(function(t){return"- "+t;}).join("\n")+"\n\n### Notes\n"+data.notes_for_reviewer+"\n\n### Checklist\n"+(data.checklist||[]).map(function(c){return"- [ ] "+c;}).join("\n");navigator.clipboard.writeText(t).catch(function(){});btn.textContent="✓ Copied!";setTimeout(function(){btn.textContent="📋 Copy PR Description";},2000);};}}
 }
-function resetUI(){
-  dc=0;
-  document.getElementById("cc").innerHTML="";
-  document.getElementById("emptyState").style.display="flex";
-  document.getElementById("pf").style.width="0%";
-  document.getElementById("pc").textContent="0 / 5";
-  document.getElementById("stxt").textContent="ready";
-  ["issue_reader","planner","code_explorer","solution","pr_helper"].forEach(function(id){setState(id,"idle");});
-}
+function resetUI(){dc=0;document.getElementById("cc").innerHTML="";document.getElementById("emptyState").style.display="flex";document.getElementById("pf").style.width="0%";document.getElementById("pc").textContent="0 / 5";document.getElementById("stxt").textContent="ready";document.getElementById("sdot").className="status-dot";["issue_reader","planner","code_explorer","solution","pr_helper"].forEach(function(id){setState(id,"idle");});}
 function startPipeline(){
-  var owner=document.getElementById("oi").value.trim();
-  var repo=document.getElementById("ri").value.trim();
-  var issue=document.getElementById("ii").value.trim();
+  var owner=document.getElementById("oi").value.trim(),repo=document.getElementById("ri").value.trim(),issue=document.getElementById("ii").value.trim();
   if(!owner||!repo||!issue){alert("Please fill in all fields.");return;}
   if(es)es.close();
   resetUI();
   document.getElementById("emptyState").style.display="none";
   document.getElementById("runBtn").disabled=true;
-  document.getElementById("stxt").textContent="running...";
+  document.getElementById("stxt").textContent="running";
+  document.getElementById("sdot").className="status-dot running";
   es=new EventSource("/run?owner="+encodeURIComponent(owner)+"&repo="+encodeURIComponent(repo)+"&issue="+encodeURIComponent(issue));
   es.onmessage=function(e){
     var msg=JSON.parse(e.data);
-    if(msg.done){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="complete";return;}
-    if(msg.error){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="error";return;}
+    if(msg.done){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="complete";document.getElementById("sdot").className="status-dot done";return;}
+    if(msg.error){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="error";document.getElementById("sdot").className="status-dot";return;}
     if(msg.status==="running"){setState(msg.agent,"running");showLoad(msg.agent);}
     if(msg.status==="done"){setState(msg.agent,"done");renderCard(msg.agent,msg.data);dc++;document.getElementById("pf").style.width=(dc/5*100)+"%";document.getElementById("pc").textContent=dc+" / 5";}
     if(msg.status==="error"){setState(msg.agent,"error");rmLoad(msg.agent);}
   };
-  es.onerror=function(){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="connection error";};
+  es.onerror=function(){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="error";document.getElementById("sdot").className="status-dot";};
 }
 </script>
 </body>
