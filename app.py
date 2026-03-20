@@ -80,7 +80,7 @@ def login():
     return redirect(
         f"https://github.com/login/oauth/authorize"
         f"?client_id={GITHUB_CLIENT_ID}"
-        f"&scope=repo,user"
+        f"&scope=repo,user:email,read:user"
     )
 
 
@@ -107,12 +107,17 @@ def callback():
     if not access_token:
         return redirect("/")
 
-    # Get user info
+    # Get user info with full profile data
     user_response = requests.get(
         "https://api.github.com/user",
-        headers={"Authorization": f"token {access_token}"}
+        headers={
+            "Authorization": f"token {access_token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
     )
     user_data = user_response.json()
+    print(f"[OAuth] User data keys: {list(user_data.keys())}")
+    print(f"[OAuth] followers: {user_data.get('followers')}, repos: {user_data.get('public_repos')}")
 
     # Save to session
     # Save user to database
