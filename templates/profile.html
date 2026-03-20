@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ContribAI — Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080a0f;--surface:#0d1017;--surface2:#131720;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--accent:#4f8fff;--accent2:#7c3aed;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--text:#f0f2f8;--muted:#4a5068;--muted2:#6b7590}
+body{background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:100;background:rgba(8,10,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:56px;display:flex;align-items:center;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+nav{display:flex;gap:2px}
+nav a{font-size:13px;color:var(--muted2);text-decoration:none;padding:5px 12px;border-radius:6px;font-weight:500;transition:color 0.15s,background 0.15s}
+nav a:hover{color:var(--text);background:var(--surface2)}
+nav a.active{color:var(--text);background:var(--surface2)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.user-avatar{width:26px;height:26px;border-radius:50%;border:1px solid var(--border2)}
+.user-name{font-size:13px;font-weight:500;color:var(--muted2)}
+.logout-btn{font-size:11px;color:var(--muted);text-decoration:none;font-family:"JetBrains Mono",monospace;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
+
+.main{max-width:900px;margin:0 auto;padding:40px 24px}
+
+/* Hero profile card */
+.profile-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:24px;display:flex;align-items:flex-start;gap:24px;position:relative;overflow:hidden}
+.profile-hero::before{content:"";position:absolute;top:0;left:0;right:0;height:80px;background:linear-gradient(135deg,rgba(79,143,255,0.08),rgba(124,58,237,0.06));pointer-events:none}
+.profile-avatar{width:72px;height:72px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--border2);flex-shrink:0;position:relative;z-index:1;margin-top:4px}
+.profile-info{flex:1;position:relative;z-index:1}
+.profile-name{font-size:22px;font-weight:600;letter-spacing:-0.5px;margin-bottom:4px}
+.profile-login{font-size:14px;color:var(--muted2);font-family:"JetBrains Mono",monospace;margin-bottom:12px}
+.profile-meta{display:flex;gap:20px;flex-wrap:wrap}
+.meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted2)}
+.meta-item svg{opacity:0.5}
+.profile-actions{display:flex;gap:8px;margin-left:auto;align-items:flex-start;position:relative;z-index:1}
+.btn-outline{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border2);border-radius:7px;font-size:12px;font-weight:500;color:var(--muted2);text-decoration:none;transition:border-color 0.15s,color 0.15s,background 0.15s;cursor:pointer;background:transparent}
+.btn-outline:hover{border-color:var(--accent);color:var(--text);background:rgba(79,143,255,0.04)}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.stat-num{font-size:26px;font-weight:600;letter-spacing:-1px;margin-bottom:4px}
+.stat-lbl{font-size:11px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:0.8px}
+.blue{color:var(--accent)}.green{color:var(--green)}.amber{color:var(--amber)}.cyan{color:var(--cyan)}
+
+/* Two col */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+
+/* Panel */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.panel-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:14px;font-weight:600}
+.panel-sub{font-size:12px;color:var(--muted2)}
+.panel-body{padding:20px}
+
+/* Badges */
+.badges-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.badge-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px}
+.badge-icon{font-size:20px;flex-shrink:0}
+.badge-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.badge-date{font-size:10px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.badge-locked{opacity:0.3;filter:grayscale(1)}
+.badge-locked .badge-name{color:var(--muted)}
+
+/* Agent bars */
+.agent-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.agent-row:last-child{margin-bottom:0}
+.agent-lbl{font-size:12px;color:var(--muted2);width:100px;flex-shrink:0}
+.atrack{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.afill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s ease}
+.aval{font-size:11px;font-family:"JetBrains Mono",monospace;color:var(--accent);width:24px;text-align:right}
+
+/* Activity */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:4px}
+.activity-text{flex:1}
+.activity-main{font-size:13px;color:var(--text);margin-bottom:2px}
+.activity-repo{color:var(--accent);font-family:"JetBrains Mono",monospace;font-size:12px}
+.activity-time{font-size:11px;color:var(--muted);font-family:"JetBrains Mono",monospace}
+.activity-conf{font-size:11px;font-family:"JetBrains Mono",monospace;color:var(--green);margin-left:auto;flex-shrink:0}
+
+.empty-msg{text-align:center;padding:32px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <a href="/" class="logo"><div class="logo-icon">⚡</div><span class="logo-name">ContribAI</span></a>
+  <nav>
+    <a href="/">Analyze</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/profile" class="active">Profile</a>
+  </nav>
+  <div class="header-right">
+    <img src="{{ user.avatar }}" class="user-avatar"/>
+    <span class="user-name">{{ user.name }}</span>
+    <a href="/auth/logout" class="logout-btn">logout</a>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Hero -->
+  <div class="profile-hero">
+    <img src="{{ user.avatar }}" class="profile-avatar"/>
+    <div class="profile-info">
+      <div class="profile-name">{{ user.name }}</div>
+      <div class="profile-login">@{{ user.login }}</div>
+      <div class="profile-meta">
+        <div class="meta-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>{{ user.followers }} followers</span>
+        </div>
+        <div class="meta-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span>{{ user.public_repos }} public repos</span>
+        </div>
+        <div class="meta-item">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="memberSince">GitHub member</span>
+        </div>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <a href="https://github.com/{{ user.login }}" target="_blank" class="btn-outline">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub Profile
+      </a>
+      <a href="/" class="btn-primary">▶ New Analysis</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num blue" id="totalAnalyses">0</div><div class="stat-lbl">Analyses</div></div>
+    <div class="stat-box"><div class="stat-num green" id="avgConf">—</div><div class="stat-lbl">Avg Confidence</div></div>
+    <div class="stat-box"><div class="stat-num amber" id="uniqueRepos">0</div><div class="stat-lbl">Repos Analyzed</div></div>
+    <div class="stat-box"><div class="stat-num cyan" id="badgeCount">0</div><div class="stat-lbl">Badges Earned</div></div>
+  </div>
+
+  <!-- Badges + Agent performance -->
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Badges</div>
+          <div class="panel-sub">Earned through your contributions</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="badges-grid" id="badgesGrid">
+          <div class="empty-msg" style="grid-column:1/-1">Loading...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Agent Performance</div>
+          <div class="panel-sub">Your average confidence per agent</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div id="agentPerf"><div class="empty-msg">No data yet</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">Recent Activity</div>
+        <div class="panel-sub">Your last 10 analyses</div>
+      </div>
+    </div>
+    <div class="panel-body" id="activityList">
+      <div class="empty-msg">No activity yet — analyze your first issue!</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ALL_BADGES = [
+  {id:"first_look", icon:"🔍", name:"First Look", desc:"Analyzed your first issue"},
+  {id:"contributor", icon:"🤝", name:"Contributor", desc:"Analyzed 5 issues"},
+  {id:"power_user", icon:"🚀", name:"Power User", desc:"Analyzed 10 issues"},
+  {id:"explorer", icon:"🌟", name:"Explorer", desc:"Analyzed 5 different repos"},
+  {id:"deep_thinker", icon:"🧠", name:"Deep Thinker", desc:"Avg confidence above 0.9"},
+];
+
+async function loadProfile() {
+  const [histRes, badgeRes, statsRes] = await Promise.all([
+    fetch("/history"),
+    fetch("/badges"),
+    fetch("/stats")
+  ]);
+  const history = await histRes.json();
+  const badges = await badgeRes.json();
+  const stats = await statsRes.json();
+
+  const earnedIds = new Set(badges.map(function(b){return b.badge_id;}));
+
+  // Stats
+  document.getElementById("totalAnalyses").textContent = stats.total || 0;
+  document.getElementById("avgConf").textContent = stats.avg_confidence ? parseFloat(stats.avg_confidence).toFixed(1) : "—";
+  document.getElementById("uniqueRepos").textContent = stats.unique_repos || 0;
+  document.getElementById("badgeCount").textContent = badges.length;
+
+  // Badges grid
+  const grid = document.getElementById("badgesGrid");
+  if(ALL_BADGES.length) {
+    grid.innerHTML = ALL_BADGES.map(function(b) {
+      const earned = earnedIds.has(b.id);
+      const earnedBadge = badges.find(function(x){return x.badge_id===b.id;});
+      const dateStr = earnedBadge ? new Date(earnedBadge.earned_at).toLocaleDateString() : "Locked";
+      return "<div class='badge-item "+(earned?"":"badge-locked")+"'><div class='badge-icon'>"+b.icon+"</div><div><div class='badge-name'>"+b.name+"</div><div class='badge-date'>"+(earned?dateStr:"🔒 "+b.desc)+"</div></div></div>";
+    }).join("");
+  }
+
+  // Agent performance
+  const agents = ["issue_reader","planner","code_explorer","solution","pr_helper"];
+  const names = ["Issue Reader","Planner","Code Explorer","Solution","PR Helper"];
+  if(history.length) {
+    const perfEl = document.getElementById("agentPerf");
+    perfEl.innerHTML = agents.map(function(a,i){
+      const vals = history.filter(function(h){return h.agent_scores&&h.agent_scores[a];}).map(function(h){return h.agent_scores[a];});
+      const avg = vals.length ? vals.reduce(function(s,v){return s+v;},0)/vals.length : 0;
+      return "<div class='agent-row'><div class='agent-lbl'>"+names[i]+"</div><div class='atrack'><div class='afill' style='width:"+Math.round(avg*100)+"%'></div></div><div class='aval'>"+avg.toFixed(1)+"</div></div>";
+    }).join("");
+  }
+
+  // Activity
+  const actEl = document.getElementById("activityList");
+  if(history.length) {
+    actEl.innerHTML = history.slice(0,10).map(function(h){
+      const date = h.created_at ? new Date(h.created_at).toLocaleDateString() : "";
+      return "<div class='activity-item'><div class='activity-dot'></div><div class='activity-text'><div class='activity-main'>Analyzed <span class='activity-repo'>"+h.repo+"</span> #"+h.issue+"</div><div class='activity-time'>"+date+(h.issue_type?" · "+h.issue_type.replace("_"," "):"")+"</div>"+(h.pr_title?"<div style='font-size:11px;color:var(--muted2);margin-top:3px'>"+h.pr_title+"</div>":"")+"</div><div class='activity-conf'>"+(h.confidence?parseFloat(h.confidence).toFixed(1):"")+"</div></div>";
+    }).join("");
+  }
+}
+
+loadProfile();
+</script>
+</body>
+</html>

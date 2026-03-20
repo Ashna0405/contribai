@@ -143,6 +143,13 @@ def logout():
     return redirect("/")
 
 
+@app.route("/profile")
+def profile():
+    user = session.get("user")
+    if not user:
+        return redirect("/")
+    return render_template("profile.html", user=user)
+
 @app.route("/dashboard")
 def dashboard():
     user = session.get("user")
