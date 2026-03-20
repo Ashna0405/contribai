@@ -149,6 +149,13 @@ def logout():
     return redirect("/")
 
 
+@app.route("/settings-page")
+def settings_page():
+    user = session.get("user")
+    if not user:
+        return redirect("/")
+    return render_template("settings.html", user=user)
+
 @app.route("/profile")
 def profile():
     user = session.get("user")

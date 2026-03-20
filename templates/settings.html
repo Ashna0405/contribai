@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ContribAI — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080a0f;--surface:#0d1017;--surface2:#131720;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);--accent:#4f8fff;--accent2:#7c3aed;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#f0f2f8;--muted:#4a5068;--muted2:#6b7590}
+body{background:var(--bg);color:var(--text);font-family:"Inter",sans-serif;min-height:100vh}
+body.light{--bg:#f8f9fc;--surface:#ffffff;--surface2:#f1f3f8;--border:rgba(0,0,0,0.06);--border2:rgba(0,0,0,0.1);--text:#0f1117;--muted:#9aa0b0;--muted2:#6b7280}
+header{position:sticky;top:0;z-index:100;background:rgba(8,10,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:56px;display:flex;align-items:center;gap:24px}
+body.light header{background:rgba(248,249,252,0.8)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.logo-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-0.3px}
+nav{display:flex;gap:2px}
+nav a{font-size:13px;color:var(--muted2);text-decoration:none;padding:5px 12px;border-radius:6px;font-weight:500;transition:color 0.15s,background 0.15s}
+nav a:hover{color:var(--text);background:var(--surface2)}
+nav a.active{color:var(--text);background:var(--surface2)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.user-avatar{width:26px;height:26px;border-radius:50%;border:1px solid var(--border2)}
+.user-name{font-size:13px;font-weight:500;color:var(--muted2)}
+.logout-btn{font-size:11px;color:var(--muted);text-decoration:none;font-family:"JetBrains Mono",monospace;padding:4px 10px;border:1px solid var(--border);border-radius:6px}
+
+.main{max-width:720px;margin:0 auto;padding:40px 24px}
+.page-title{font-size:24px;font-weight:600;letter-spacing:-0.5px;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted2);margin-bottom:32px}
+
+.settings-group{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.group-head{padding:16px 20px;border-bottom:1px solid var(--border)}
+.group-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.group-sub{font-size:12px;color:var(--muted2)}
+
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-info{flex:1}
+.setting-label{font-size:14px;font-weight:500;margin-bottom:3px}
+.setting-desc{font-size:12px;color:var(--muted2);line-height:1.5}
+
+/* Toggle switch */
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border2);border-radius:11px;cursor:pointer;transition:background 0.2s,border-color 0.2s}
+.toggle input:checked + .toggle-track{background:var(--accent);border-color:var(--accent)}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform 0.2s;pointer-events:none}
+.toggle input:checked ~ .toggle-thumb{transform:translateX(18px)}
+
+/* Theme selector */
+.theme-options{display:flex;gap:8px}
+.theme-opt{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.theme-preview{width:48px;height:32px;border-radius:6px;border:2px solid var(--border);transition:border-color 0.15s;position:relative;overflow:hidden}
+.theme-opt.selected .theme-preview{border-color:var(--accent)}
+.theme-name{font-size:11px;color:var(--muted2);font-weight:500}
+.theme-opt.selected .theme-name{color:var(--accent)}
+.preview-dark{background:#080a0f}
+.preview-dark::after{content:"";position:absolute;top:6px;left:6px;right:6px;height:4px;background:rgba(79,143,255,0.3);border-radius:2px}
+.preview-light{background:#f8f9fc}
+.preview-light::after{content:"";position:absolute;top:6px;left:6px;right:6px;height:4px;background:rgba(79,143,255,0.2);border-radius:2px}
+
+/* Input */
+.setting-input{background:var(--surface2);border:1px solid var(--border2);border-radius:7px;padding:7px 12px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--text);outline:none;width:200px;transition:border-color 0.2s}
+.setting-input:focus{border-color:var(--accent)}
+.setting-input::placeholder{color:var(--muted)}
+
+/* Save button */
+.save-row{display:flex;align-items:center;justify-content:space-between;padding:20px 0 0}
+.save-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-family:"Inter",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:opacity 0.15s}
+.save-btn:hover{opacity:0.88}
+.save-msg{font-size:13px;color:var(--green);font-weight:500;opacity:0;transition:opacity 0.3s}
+.save-msg.show{opacity:1}
+
+/* Danger zone */
+.danger-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px}
+.danger-label{font-size:14px;font-weight:500;color:var(--red);margin-bottom:3px}
+.danger-desc{font-size:12px;color:var(--muted2)}
+.danger-btn{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.2);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:500;cursor:pointer;transition:background 0.15s}
+.danger-btn:hover{background:rgba(239,68,68,0.15)}
+</style>
+</head>
+<body id="bodyEl">
+<header>
+  <a href="/" class="logo"><div class="logo-icon">⚡</div><span class="logo-name">ContribAI</span></a>
+  <nav>
+    <a href="/">Analyze</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/profile">Profile</a>
+    <a href="/settings" class="active">Settings</a>
+  </nav>
+  <div class="header-right">
+    <img src="{{ user.avatar }}" class="user-avatar"/>
+    <span class="user-name">{{ user.name }}</span>
+    <a href="/auth/logout" class="logout-btn">logout</a>
+  </div>
+</header>
+
+<div class="main">
+  <div class="page-title">Settings</div>
+  <div class="page-sub">Customize your ContribAI experience</div>
+
+  <!-- Appearance -->
+  <div class="settings-group">
+    <div class="group-head">
+      <div class="group-title">Appearance</div>
+      <div class="group-sub">Customize how ContribAI looks</div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">Theme</div>
+        <div class="setting-desc">Choose between dark and light mode</div>
+      </div>
+      <div class="theme-options">
+        <div class="theme-opt selected" id="darkOpt" onclick="setTheme('dark')">
+          <div class="theme-preview preview-dark"></div>
+          <div class="theme-name">Dark</div>
+        </div>
+        <div class="theme-opt" id="lightOpt" onclick="setTheme('light')">
+          <div class="theme-preview preview-light"></div>
+          <div class="theme-name">Light</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Defaults -->
+  <div class="settings-group">
+    <div class="group-head">
+      <div class="group-title">Default Repository</div>
+      <div class="group-sub">Pre-fill the analyze form with your favourite repo</div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">Default Owner</div>
+        <div class="setting-desc">GitHub username or organization</div>
+      </div>
+      <input class="setting-input" id="defaultOwner" placeholder="e.g. psf"/>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">Default Repo</div>
+        <div class="setting-desc">Repository name</div>
+      </div>
+      <input class="setting-input" id="defaultRepo" placeholder="e.g. requests"/>
+    </div>
+  </div>
+
+  <!-- Account -->
+  <div class="settings-group">
+    <div class="group-head">
+      <div class="group-title">Account</div>
+      <div class="group-sub">Your GitHub account details</div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">GitHub Account</div>
+        <div class="setting-desc">@{{ user.login }} — connected via OAuth</div>
+      </div>
+      <a href="https://github.com/{{ user.login }}" target="_blank" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:500">View on GitHub ↗</a>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">Public Repositories</div>
+        <div class="setting-desc">Number of public repos on your account</div>
+      </div>
+      <span style="font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--muted2)">{{ user.public_repos }}</span>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">Followers</div>
+        <div class="setting-desc">Your GitHub followers count</div>
+      </div>
+      <span style="font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--muted2)">{{ user.followers }}</span>
+    </div>
+  </div>
+
+  <!-- Danger zone -->
+  <div class="settings-group">
+    <div class="group-head">
+      <div class="group-title" style="color:var(--red)">Danger Zone</div>
+      <div class="group-sub">Irreversible actions</div>
+    </div>
+    <div class="danger-row">
+      <div>
+        <div class="danger-label">Sign out</div>
+        <div class="danger-desc">Sign out of your GitHub account</div>
+      </div>
+      <a href="/auth/logout" class="danger-btn">Sign out</a>
+    </div>
+  </div>
+
+  <div class="save-row">
+    <span class="save-msg" id="saveMsg">✓ Settings saved!</span>
+    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+  </div>
+</div>
+
+<script>
+var currentTheme = "dark";
+
+async function loadSettings() {
+  try {
+    const res = await fetch("/settings");
+    const s = await res.json();
+    currentTheme = s.theme || "dark";
+    applyTheme(currentTheme);
+    document.getElementById("defaultOwner").value = s.default_owner || "";
+    document.getElementById("defaultRepo").value = s.default_repo || "";
+  } catch(e) {}
+}
+
+function setTheme(t) {
+  currentTheme = t;
+  applyTheme(t);
+}
+
+function applyTheme(t) {
+  const body = document.getElementById("bodyEl");
+  if(t === "light") {
+    body.classList.add("light");
+    document.getElementById("lightOpt").classList.add("selected");
+    document.getElementById("darkOpt").classList.remove("selected");
+  } else {
+    body.classList.remove("light");
+    document.getElementById("darkOpt").classList.add("selected");
+    document.getElementById("lightOpt").classList.remove("selected");
+  }
+}
+
+async function saveSettings() {
+  const data = {
+    theme: currentTheme,
+    default_owner: document.getElementById("defaultOwner").value.trim(),
+    default_repo: document.getElementById("defaultRepo").value.trim()
+  };
+  try {
+    await fetch("/settings", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(data)
+    });
+    const msg = document.getElementById("saveMsg");
+    msg.classList.add("show");
+    setTimeout(function(){msg.classList.remove("show");}, 3000);
+
+    // Apply theme globally
+    localStorage.setItem("theme", currentTheme);
+  } catch(e) {}
+}
+
+// Apply saved theme on load
+const savedTheme = localStorage.getItem("theme");
+if(savedTheme) applyTheme(savedTheme);
+
+loadSettings();
+</script>
+</body>
+</html>
