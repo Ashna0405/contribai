@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from database import init_db, upsert_user, save_analysis, get_user_analyses, get_user_stats, check_and_award_badges, get_user_badges, get_settings
 from github.github_client import get_issue
 from agents.issue_reader_agent import read_issue
 from agents.planner_agent import plan_issue
@@ -18,6 +19,12 @@ from memory.session_store import session as agent_session
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "contribai2026")
+
+# Initialize database tables on startup
+try:
+    init_db()
+except Exception as e:
+    print(f"[DB] Warning: {e}")
 
 GITHUB_CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET")
@@ -107,6 +114,19 @@ def callback():
     user_data = user_response.json()
 
     # Save to session
+    # Save user to database
+    try:
+        upsert_user({
+            "login": user_data.get("login"),
+            "name": user_data.get("name") or user_data.get("login"),
+            "avatar": user_data.get("avatar_url"),
+            "email": user_data.get("email", "") or "",
+            "public_repos": user_data.get("public_repos", 0),
+            "followers": user_data.get("followers", 0),
+        })
+    except Exception as e:
+        print(f"[DB] Error saving user: {e}")
+
     session["user"] = {
         "login": user_data.get("login"),
         "name": user_data.get("name") or user_data.get("login"),
@@ -135,7 +155,65 @@ def history():
     user = session.get("user")
     if not user:
         return jsonify([])
-    return jsonify(user_history.get(user["login"], []))
+    try:
+        analyses = get_user_analyses(user["login"])
+        # Convert datetime to string for JSON
+        for a in analyses:
+            if "created_at" in a and a["created_at"]:
+                a["created_at"] = str(a["created_at"])
+        return jsonify(analyses)
+    except Exception as e:
+        print(f"[DB] Error fetching history: {e}")
+        return jsonify(user_history.get(user["login"], []))
+
+@app.route("/stats")
+def stats():
+    user = session.get("user")
+    if not user:
+        return jsonify({})
+    try:
+        s = get_user_stats(user["login"])
+        for k, v in s.items():
+            if v is None:
+                s[k] = 0
+            elif hasattr(v, "__float__"):
+                s[k] = round(float(v), 2)
+        return jsonify(s)
+    except Exception as e:
+        print(f"[DB] Error fetching stats: {e}")
+        return jsonify({})
+
+@app.route("/badges")
+def badges():
+    user = session.get("user")
+    if not user:
+        return jsonify([])
+    try:
+        b = get_user_badges(user["login"])
+        for badge in b:
+            if "earned_at" in badge and badge["earned_at"]:
+                badge["earned_at"] = str(badge["earned_at"])
+        return jsonify(b)
+    except Exception as e:
+        print(f"[DB] Error fetching badges: {e}")
+        return jsonify([])
+
+@app.route("/settings", methods=["GET", "POST"])
+def settings_route():
+    user = session.get("user")
+    if not user:
+        return jsonify({})
+    if request.method == "POST":
+        data = request.json
+        try:
+            save_settings(user["login"], data)
+            return jsonify({"success": True})
+        except Exception as e:
+            return jsonify({"error": str(e)})
+    try:
+        return jsonify(get_settings(user["login"]))
+    except Exception as e:
+        return jsonify({"theme": "dark"})
 
 
 @app.route("/run")
@@ -181,6 +259,13 @@ def run():
                     })
                     # Keep only last 10
                     user_history[username] = user_history[username][:10]
+
+                    # Save to PostgreSQL
+                    try:
+                        save_analysis(username, f"{owner}/{repo}", issue_number, item["all"])
+                        check_and_award_badges(username)
+                    except Exception as e:
+                        print(f"[DB] Error saving analysis: {e}")
 
                 yield f"data: {json.dumps(item)}\n\n"
                 if item.get("done") or item.get("error"):
