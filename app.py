@@ -90,6 +90,12 @@ def callback():
     if not code:
         return redirect("/")
 
+@app.route("/debug-user")
+def debug_user():
+    user = session.get("user")
+    from flask import jsonify
+    return jsonify(user or {})
+
     # Exchange code for token
     token_response = requests.post(
         "https://github.com/login/oauth/access_token",
