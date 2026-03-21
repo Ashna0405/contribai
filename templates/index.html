@@ -233,10 +233,37 @@ function startPipeline(){
   es.onmessage=function(e){
     var msg=JSON.parse(e.data);
     if(msg.done){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="complete";document.getElementById("sdot").className="status-dot done";return;}
-    if(msg.error){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="error";document.getElementById("sdot").className="status-dot";return;}
+    if(msg.error){
+      es.close();
+      document.getElementById("runBtn").disabled=false;
+      document.getElementById("stxt").textContent="error";
+      document.getElementById("sdot").className="status-dot";
+      var errDiv=document.createElement("div");
+      errDiv.style.cssText="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:20px;margin-bottom:16px;text-align:center;animation:fadeUp 0.3s ease";
+      var errMsg=msg.error||"Something went wrong";
+      var hint="";
+      if(errMsg.includes("404")||errMsg.includes("not found")||errMsg.includes("Not Found")){
+        hint="<div style='font-size:12px;color:var(--muted);margin-top:8px;font-family:JetBrains Mono,monospace'>Check that the owner, repo and issue number are correct</div>";
+      } else if(errMsg.includes("401")||errMsg.includes("token")){
+        hint="<div style='font-size:12px;color:var(--muted);margin-top:8px;font-family:JetBrains Mono,monospace'>GitHub token may be expired. Try logging out and back in</div>";
+      } else if(errMsg.includes("rate")||errMsg.includes("403")){
+        hint="<div style='font-size:12px;color:var(--muted);margin-top:8px;font-family:JetBrains Mono,monospace'>GitHub API rate limit hit. Please wait a minute and try again</div>";
+      }
+      errDiv.innerHTML="<div style='font-size:28px;margin-bottom:8px'>⚠️</div><div style='font-size:15px;font-weight:600;color:var(--red)'>Pipeline Failed</div><div style='font-size:13px;color:var(--muted2);margin-top:4px'>"+errMsg+"</div>"+hint;
+      document.getElementById("cc").appendChild(errDiv);
+      return;
+    }
     if(msg.status==="running"){setState(msg.agent,"running");showLoad(msg.agent);}
     if(msg.status==="done"){setState(msg.agent,"done");renderCard(msg.agent,msg.data);dc++;document.getElementById("pf").style.width=(dc/5*100)+"%";document.getElementById("pc").textContent=dc+" / 5";}
-    if(msg.status==="error"){setState(msg.agent,"error");rmLoad(msg.agent);}
+    if(msg.status==="error"){
+      setState(msg.agent,"error");
+      rmLoad(msg.agent);
+      var errDiv=document.createElement("div");
+      errDiv.style.cssText="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;animation:fadeUp 0.3s ease";
+      var errMsg=msg.data&&msg.data.error?msg.data.error:"Agent failed. Please try again.";
+      errDiv.innerHTML="<div style='font-size:18px'>❌</div><div><div style='font-size:14px;font-weight:600;color:var(--red)'>Agent Error</div><div style='font-size:13px;color:var(--muted2);margin-top:2px'>"+errMsg+"</div></div>";
+      document.getElementById("cc").appendChild(errDiv);
+    }
   };
   es.onerror=function(){es.close();document.getElementById("runBtn").disabled=false;document.getElementById("stxt").textContent="error";document.getElementById("sdot").className="status-dot";};
 }

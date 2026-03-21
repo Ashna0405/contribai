@@ -47,7 +47,7 @@ def get_issue(owner: str, repo: str, issue_number: int) -> dict:
                 }
 
             elif response.status_code == 404:
-                return {"error": f"Issue #{issue_number} not found in {owner}/{repo}."}
+                return {"error": f"Issue #{issue_number} does not exist in {owner}/{repo}. Please check the issue number and try again."}
 
             elif response.status_code == 401:
                 return {"error": "Invalid GITHUB_TOKEN. Check your .env file."}
